@@ -5,7 +5,7 @@ import Fireworks from './Fireworks';
 function App() {
   const [players, setPlayers] = useState([]);
   const [playerName, setPlayerName] = useState('');
-  const [playerTier, setPlayerTier] = useState('Bronze');
+  const [playerTier, setPlayerTier] = useState('Chicken');
   const [teams, setTeams] = useState({ team1: [], team2: [] });
   const [showTeams, setShowTeams] = useState(false);
   const [sortByTier, setSortByTier] = useState(false);
@@ -26,6 +26,8 @@ function App() {
 
   // Định nghĩa các tier và điểm số
   const tiers = {
+    'Chicken': { value: 0, color: '#FF6B6B', icon: '🐔' },
+    'Duck': { value: 0.5, color: '#FFA726', icon: '🦆' },
     'Bronze': { value: 1, color: '#CD7F32', icon: '🥉' },
     'Silver': { value: 2, color: '#C0C0C0', icon: '🥈' },
     'Gold': { value: 3, color: '#FFD700', icon: '🥇' },
@@ -45,7 +47,7 @@ function App() {
         };
         setPlayers([...players, newPlayer]);
         setPlayerName('');
-        setPlayerTier('Bronze');
+        setPlayerTier('Chicken');
       }
     }
   };
@@ -121,7 +123,7 @@ function App() {
     setTeams({ team1: [], team2: [] });
     setShowTeams(false);
     setPlayerName('');
-    setPlayerTier('Bronze');
+    setPlayerTier('Chicken');
     setFlippedCards({});
     setAllCardsFlipped(false);
     stopAutoFlip();
@@ -273,7 +275,7 @@ function App() {
     });
     
     // Tạo danh sách các tier để lật (từ cao xuống thấp)
-    const tierOrder = ['Master', 'Diamond', 'Gold', 'Silver', 'Bronze'];
+    const tierOrder = ['Master', 'Diamond', 'Gold', 'Silver', 'Bronze', 'Duck', 'Chicken'];
     const flipGroups = [];
     
     tierOrder.forEach(tier => {

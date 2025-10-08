@@ -5,7 +5,7 @@
 ## 🚀 Tính năng
 
 - ➕ **Thêm tuyển thủ**: Nhập tên và chọn tier cho từng tuyển thủ
-- 🏆 **Hệ thống Tier**: 5 cấp độ từ Bronze đến Master với điểm số khác nhau
+- 🏆 **Hệ thống Tier**: 7 cấp độ từ Chicken đến Master với điểm số khác nhau
 - ⚖️ **Chia đội cân bằng**: Thuật toán thông minh chia đội dựa trên tổng điểm tier
 - 📊 **Hiển thị điểm đội**: Xem tổng điểm tier của mỗi đội
 - 🔄 **Chia lại đội**: Tạo tổ hợp mới với thuật toán cân bằng
@@ -25,6 +25,8 @@
 
 | Tier | Icon | Điểm | Mô tả |
 |------|------|------|-------|
+| 🐔 Chicken | 0 | Cấp độ mới bắt đầu |
+| 🦆 Duck | 0.5 | Cấp độ học hỏi |
 | 🥉 Bronze | 1 | Cấp độ cơ bản |
 | 🥈 Silver | 2 | Cấp độ trung bình |
 | 🥇 Gold | 3 | Cấp độ khá |
@@ -65,7 +67,7 @@
 
 2. **Thêm tuyển thủ:**
    - Nhập tên tuyển thủ vào ô input
-   - Chọn tier từ dropdown (Bronze → Master)
+   - Chọn tier từ dropdown (Chicken → Master)
    - Nhấn nút "Thêm" hoặc phím Enter
    - Lặp lại cho tất cả tuyển thủ
 
