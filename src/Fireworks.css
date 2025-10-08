@@ -1,0 +1,93 @@
+.fireworks-container {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+}
+
+.firework-particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: 50%;
+  animation: firework-burst 2s ease-out forwards;
+  box-shadow: 0 0 10px var(--color);
+}
+
+@keyframes firework-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(
+      calc(cos(var(--angle)) * var(--velocity) * 50px),
+      calc(sin(var(--angle)) * var(--velocity) * 50px)
+    ) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(
+      calc(cos(var(--angle)) * var(--velocity) * 100px),
+      calc(sin(var(--angle)) * var(--velocity) * 100px)
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Sparkle effect for extra magic */
+.firework-particle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sparkle 1s ease-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Glow effect */
+.firework-particle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(2px);
+  opacity: 0.6;
+  animation: glow 2s ease-out forwards;
+}
+
+@keyframes glow {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
