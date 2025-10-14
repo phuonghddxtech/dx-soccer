@@ -12,3 +12,4 @@ Hoặc sử dụng file audio mẫu khác:
 - `victory.mp3` - Âm thanh khi chia đội thành công
 
 Lưu ý: File audio phải có định dạng MP3 và kích thước nhỏ để tải nhanh.
+

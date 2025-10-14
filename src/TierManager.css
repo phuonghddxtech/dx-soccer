@@ -1,0 +1,367 @@
+.tier-manager-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.tier-manager-modal {
+  background: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tier-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 2px solid #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px 20px 0 0;
+}
+
+.tier-manager-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.tier-manager-content {
+  padding: 30px;
+}
+
+.add-tier-section {
+  margin-bottom: 30px;
+}
+
+.add-tier-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.add-tier-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  align-items: end;
+}
+
+.tier-name-input,
+.tier-value-input {
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.tier-name-input:focus,
+.tier-value-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.color-picker,
+.icon-picker {
+  grid-column: 1 / -1;
+}
+
+.color-picker label,
+.icon-picker label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.color-options,
+.icon-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.selected {
+  border-color: #333;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #333;
+}
+
+.icon-option {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-option:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.icon-option.selected {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.add-tier-btn {
+  grid-column: 1 / -1;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-tier-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+}
+
+.current-tiers-section h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.tiers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tier-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.tier-item:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.tier-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tier-icon {
+  font-size: 24px;
+}
+
+.tier-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.tier-value {
+  color: #666;
+  font-size: 14px;
+}
+
+.tier-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-value-input {
+  width: 80px;
+  padding: 8px 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.edit-value-input:focus {
+  border-color: #667eea;
+}
+
+.remove-tier-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.remove-tier-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.tier-manager-footer {
+  padding: 20px 30px;
+  border-top: 2px solid #f0f0f0;
+  background: #f8f9fa;
+  border-radius: 0 0 20px 20px;
+}
+
+.save-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.save-icon {
+  font-size: 16px;
+}
+
+.save-text {
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 600;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.reset-btn,
+.save-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tier-manager-modal {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .tier-manager-header,
+  .tier-manager-content,
+  .tier-manager-footer {
+    padding: 20px;
+  }
+  
+  .add-tier-form {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .reset-btn,
+  .save-btn {
+    width: 100%;
+  }
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Fireworks from './Fireworks';
+import TierManager from './TierManager';
+import FormationManager from './FormationManager';
 
 function App() {
   const [players, setPlayers] = useState([]);
@@ -17,6 +19,11 @@ function App() {
   const [currentFlipIndex, setCurrentFlipIndex] = useState(0);
   const [totalFlipGroups, setTotalFlipGroups] = useState(0);
   const [fireworks, setFireworks] = useState([]);
+  const [showTierManager, setShowTierManager] = useState(false);
+  const [customTiers, setCustomTiers] = useState(null);
+  const [isRandomMode, setIsRandomMode] = useState(false);
+  const [showFormationManager, setShowFormationManager] = useState(false);
+  const [formations, setFormations] = useState({ team1: null, team2: null });
 
   // Refs cho audio elements
   const backgroundMusicRef = useRef(null);
@@ -24,8 +31,8 @@ function App() {
   const victorySoundRef = useRef(null);
   const autoFlipIntervalRef = useRef(null);
 
-  // Định nghĩa các tier và điểm số
-  const tiers = {
+  // Định nghĩa các tier mặc định
+  const defaultTiers = {
     'Chicken': { value: 0, color: '#FF6B6B', icon: '🐔' },
     'Duck': { value: 0.5, color: '#FFA726', icon: '🦆' },
     'Bronze': { value: 1, color: '#CD7F32', icon: '🥉' },
@@ -34,6 +41,13 @@ function App() {
     'Diamond': { value: 4, color: '#B9F2FF', icon: '💎' },
     'Master': { value: 5, color: '#8A2BE2', icon: '👑' }
   };
+
+  // Lấy tier list hiện tại (default hoặc custom)
+  const getCurrentTiers = () => {
+    return customTiers || defaultTiers;
+  };
+
+  const tiers = getCurrentTiers();
 
   // Thêm người chơi
   const addPlayer = () => {
@@ -59,8 +73,41 @@ function App() {
     setShowTeams(false);
   };
 
+  // Chia đội random
+  const divideTeamsRandom = () => {
+    if (players.length < 2) {
+      alert('Cần ít nhất 2 người chơi để chia đội!');
+      return;
+    }
+
+    // Tạo bản sao và shuffle ngẫu nhiên
+    const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+    
+    const team1 = [];
+    const team2 = [];
+
+    // Chia đều ngẫu nhiên
+    shuffledPlayers.forEach((player, index) => {
+      if (index % 2 === 0) {
+        team1.push(player);
+      } else {
+        team2.push(player);
+      }
+    });
+
+    setTeams({ team1, team2 });
+    setShowTeams(true);
+    
+    // Reset animation states khi chia đội mới
+    setFlippedCards({});
+    setAllCardsFlipped(false);
+    
+    // Phát âm thanh chiến thắng
+    playVictorySound();
+  };
+
   // Chia đội cân bằng dựa trên tier
-  const divideTeams = () => {
+  const divideTeamsBalanced = () => {
     if (players.length < 2) {
       alert('Cần ít nhất 2 người chơi để chia đội!');
       return;
@@ -110,6 +157,15 @@ function App() {
     
     // Phát âm thanh chiến thắng
     playVictorySound();
+  };
+
+  // Chia đội (chọn chế độ)
+  const divideTeams = () => {
+    if (isRandomMode) {
+      divideTeamsRandom();
+    } else {
+      divideTeamsBalanced();
+    }
   };
 
   // Chia lại đội
@@ -275,7 +331,8 @@ function App() {
     });
     
     // Tạo danh sách các tier để lật (từ cao xuống thấp)
-    const tierOrder = ['Master', 'Diamond', 'Gold', 'Silver', 'Bronze', 'Duck', 'Chicken'];
+    const currentTiers = getCurrentTiers();
+    const tierOrder = Object.keys(currentTiers).sort((a, b) => currentTiers[b].value - currentTiers[a].value);
     const flipGroups = [];
     
     tierOrder.forEach(tier => {
@@ -357,6 +414,83 @@ function App() {
     }
   };
 
+  // Hàm quản lý tier
+  const openTierManager = () => {
+    setShowTierManager(true);
+  };
+
+  const closeTierManager = () => {
+    setShowTierManager(false);
+  };
+
+  // Hàm quản lý sơ đồ
+  const openFormationManager = () => {
+    if (!showTeams) {
+      alert('Vui lòng chia đội trước khi quản lý sơ đồ!');
+      return;
+    }
+    setShowFormationManager(true);
+  };
+
+  const closeFormationManager = () => {
+    setShowFormationManager(false);
+  };
+
+  const handleFormationChange = (newFormations) => {
+    setFormations(newFormations);
+  };
+
+  const resetToDefaultTiers = () => {
+    setCustomTiers(null);
+    setPlayerTier(Object.keys(defaultTiers)[0]);
+    
+    // Xóa khỏi localStorage
+    try {
+      localStorage.removeItem('dx-soccer-custom-tiers');
+      console.log('Custom tiers removed from localStorage');
+    } catch (error) {
+      console.error('Error removing custom tiers from localStorage:', error);
+    }
+  };
+
+  const saveCustomTiers = (newTiers) => {
+    setCustomTiers(newTiers);
+    
+    // Lưu vào localStorage
+    try {
+      localStorage.setItem('dx-soccer-custom-tiers', JSON.stringify(newTiers));
+      console.log('Custom tiers saved to localStorage');
+    } catch (error) {
+      console.error('Error saving custom tiers to localStorage:', error);
+    }
+    
+    // Reset player tier nếu tier hiện tại không tồn tại trong list mới
+    const tierNames = Object.keys(newTiers);
+    if (!tierNames.includes(playerTier)) {
+      setPlayerTier(tierNames[0]);
+    }
+  };
+
+  // Load custom tiers từ localStorage khi component mount
+  useEffect(() => {
+    const savedCustomTiers = localStorage.getItem('dx-soccer-custom-tiers');
+    if (savedCustomTiers) {
+      try {
+        const parsedTiers = JSON.parse(savedCustomTiers);
+        setCustomTiers(parsedTiers);
+        
+        // Đảm bảo playerTier hiện tại tồn tại trong custom tiers
+        const tierNames = Object.keys(parsedTiers);
+        if (!tierNames.includes(playerTier)) {
+          setPlayerTier(tierNames[0] || 'Chicken');
+        }
+      } catch (error) {
+        console.error('Error loading custom tiers:', error);
+        localStorage.removeItem('dx-soccer-custom-tiers');
+      }
+    }
+  }, []);
+
   // Cleanup interval khi component unmount
   useEffect(() => {
     return () => {
@@ -378,7 +512,22 @@ function App() {
       <div className="container">
         <h1 className="title">⚽ DX Soccer</h1>
         
-        {/* Điều khiển âm thanh */}
+        {/* Custom Tier Indicator */}
+        {customTiers && (
+          <div className="custom-tier-indicator">
+            <span className="indicator-icon">🎯</span>
+            <span className="indicator-text">Đang sử dụng Custom Tier List</span>
+            <button 
+              onClick={resetToDefaultTiers}
+              className="reset-indicator-btn"
+              title="Reset về tier mặc định"
+            >
+              🔄
+            </button>
+          </div>
+        )}
+        
+        {/* Điều khiển âm thanh và tier */}
         <div className="audio-controls">
           <div className="audio-controls-group">
             <button 
@@ -387,6 +536,21 @@ function App() {
             >
               {isMusicPlaying ? '🔊' : '🔇'} 
               {isMusicPlaying ? 'Tắt Nhạc' : 'Bật Nhạc'}
+            </button>
+            
+            <button 
+              onClick={openTierManager}
+              className={`tier-manager-btn ${customTiers ? 'custom-active' : ''}`}
+            >
+              🎯 Set Up List Tier {customTiers ? '✅' : ''}
+            </button>
+            
+            <button 
+              onClick={openFormationManager}
+              className={`formation-manager-btn ${showTeams ? 'available' : 'disabled'}`}
+              disabled={!showTeams}
+            >
+              ⚽ Quản Lý Sơ Đồ
             </button>
             
             <div className="volume-control">
@@ -477,12 +641,34 @@ function App() {
         {/* Nút điều khiển */}
         {players.length >= 2 && (
           <div className="control-buttons">
-            <button onClick={divideTeams} className="divide-btn">
-              Chia Đội
-            </button>
-            <button onClick={resetAll} className="reset-btn">
-              Reset Tất Cả
-            </button>
+            <div className="mode-toggle-section">
+              <div className="mode-toggle">
+                <button 
+                  onClick={() => setIsRandomMode(false)}
+                  className={`mode-btn ${!isRandomMode ? 'active' : ''}`}
+                >
+                  ⚖️ Cân Bằng
+                </button>
+                <button 
+                  onClick={() => setIsRandomMode(true)}
+                  className={`mode-btn ${isRandomMode ? 'active' : ''}`}
+                >
+                  🎲 Random
+                </button>
+              </div>
+              <div className="mode-indicator">
+                {isRandomMode ? '🎲 Chế độ Random' : '⚖️ Chế độ Cân Bằng'}
+              </div>
+            </div>
+            
+            <div className="action-buttons">
+              <button onClick={divideTeams} className="divide-btn">
+                {isRandomMode ? '🎲 Chia Đội Random' : '⚖️ Chia Đội Cân Bằng'}
+              </button>
+              <button onClick={resetAll} className="reset-btn">
+                Reset Tất Cả
+              </button>
+            </div>
           </div>
         )}
 
@@ -637,6 +823,24 @@ function App() {
           position={firework.position}
         />
       ))}
+      
+      {/* Tier Manager */}
+      <TierManager
+        isOpen={showTierManager}
+        onClose={closeTierManager}
+        currentTiers={tiers}
+        onSave={saveCustomTiers}
+        onReset={resetToDefaultTiers}
+      />
+      
+      {/* Formation Manager */}
+      <FormationManager
+        isOpen={showFormationManager}
+        onClose={closeFormationManager}
+        teams={teams}
+        onFormationChange={handleFormationChange}
+        currentFormations={formations}
+      />
     </div>
   );
 }
