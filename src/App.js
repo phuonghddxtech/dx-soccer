@@ -33,7 +33,7 @@ function App() {
 
   // Định nghĩa các tier mặc định
   const defaultTiers = {
-    'Chicken': { value: 0, color: '#FF6B6B', icon: '🐔' },
+    'Chicken': { value: 0.1, color: '#FF6B6B', icon: '🐔' },
     'Duck': { value: 0.5, color: '#FFA726', icon: '🦆' },
     'Bronze': { value: 1, color: '#CD7F32', icon: '🥉' },
     'Silver': { value: 2, color: '#C0C0C0', icon: '🥈' },
