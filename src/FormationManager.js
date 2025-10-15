@@ -18,17 +18,6 @@ const FormationManager = ({
 
   // Định nghĩa các sơ đồ mẫu cho sân 5 người (1/2 sân bóng)
   const formationTemplates = {
-    '2-2-1': {
-      name: '2-2-1',
-      positions: [
-        { id: 'gk', x: 50, y: 88, name: 'Thủ môn', required: true },
-        { id: 'df1', x: 30, y: 70, name: 'Hậu vệ 1' },
-        { id: 'df2', x: 70, y: 70, name: 'Hậu vệ 2' },
-        { id: 'mf1', x: 30, y: 50, name: 'Tiền vệ 1' },
-        { id: 'mf2', x: 70, y: 50, name: 'Tiền vệ 2' },
-        { id: 'st', x: 50, y: 30, name: 'Tiền đạo' }
-      ]
-    },
     '1-2-1': {
       name: '1-2-1',
       positions: [
