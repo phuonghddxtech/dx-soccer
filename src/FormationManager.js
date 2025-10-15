@@ -9,77 +9,54 @@ const FormationManager = ({
   currentFormations = { team1: null, team2: null }
 }) => {
   const [selectedTeam, setSelectedTeam] = useState('team1');
-  const [selectedFormation, setSelectedFormation] = useState('4-4-2');
+  const [selectedFormation, setSelectedFormation] = useState('2-2-1');
   const [draggedPlayer, setDraggedPlayer] = useState(null);
   const [formations, setFormations] = useState({
     team1: currentFormations.team1 || {},
     team2: currentFormations.team2 || {}
   });
 
-  // Định nghĩa các sơ đồ mẫu
+  // Định nghĩa các sơ đồ mẫu cho sân 5 người (1/2 sân bóng)
   const formationTemplates = {
-    '4-4-2': {
-      name: '4-4-2',
+    '2-2-1': {
+      name: '2-2-1',
       positions: [
-        { id: 'gk', x: 50, y: 90, name: 'Thủ môn', required: true },
-        { id: 'lb', x: 20, y: 70, name: 'Hậu vệ trái' },
-        { id: 'cb1', x: 40, y: 70, name: 'Trung vệ 1' },
-        { id: 'cb2', x: 60, y: 70, name: 'Trung vệ 2' },
-        { id: 'rb', x: 80, y: 70, name: 'Hậu vệ phải' },
-        { id: 'lm', x: 20, y: 50, name: 'Tiền vệ trái' },
-        { id: 'cm1', x: 40, y: 50, name: 'Tiền vệ 1' },
-        { id: 'cm2', x: 60, y: 50, name: 'Tiền vệ 2' },
-        { id: 'rm', x: 80, y: 50, name: 'Tiền vệ phải' },
-        { id: 'st1', x: 40, y: 25, name: 'Tiền đạo 1' },
-        { id: 'st2', x: 60, y: 25, name: 'Tiền đạo 2' }
+        { id: 'gk', x: 50, y: 88, name: 'Thủ môn', required: true },
+        { id: 'df1', x: 30, y: 70, name: 'Hậu vệ 1' },
+        { id: 'df2', x: 70, y: 70, name: 'Hậu vệ 2' },
+        { id: 'mf1', x: 30, y: 50, name: 'Tiền vệ 1' },
+        { id: 'mf2', x: 70, y: 50, name: 'Tiền vệ 2' },
+        { id: 'st', x: 50, y: 30, name: 'Tiền đạo' }
       ]
     },
-    '4-3-3': {
-      name: '4-3-3',
+    '1-2-1': {
+      name: '1-2-1',
       positions: [
-        { id: 'gk', x: 50, y: 90, name: 'Thủ môn', required: true },
-        { id: 'lb', x: 20, y: 70, name: 'Hậu vệ trái' },
-        { id: 'cb1', x: 40, y: 70, name: 'Trung vệ 1' },
-        { id: 'cb2', x: 60, y: 70, name: 'Trung vệ 2' },
-        { id: 'rb', x: 80, y: 70, name: 'Hậu vệ phải' },
-        { id: 'cm1', x: 30, y: 50, name: 'Tiền vệ 1' },
-        { id: 'cm2', x: 50, y: 50, name: 'Tiền vệ 2' },
-        { id: 'cm3', x: 70, y: 50, name: 'Tiền vệ 3' },
-        { id: 'lw', x: 20, y: 25, name: 'Tiền đạo cánh trái' },
-        { id: 'st', x: 50, y: 25, name: 'Tiền đạo trung tâm' },
-        { id: 'rw', x: 80, y: 25, name: 'Tiền đạo cánh phải' }
+        { id: 'gk', x: 50, y: 88, name: 'Thủ môn', required: true },
+        { id: 'df', x: 50, y: 70, name: 'Hậu vệ' },
+        { id: 'mf1', x: 30, y: 50, name: 'Tiền vệ 1' },
+        { id: 'mf2', x: 70, y: 50, name: 'Tiền vệ 2' },
+        { id: 'st', x: 50, y: 30, name: 'Tiền đạo' }
       ]
     },
-    '3-5-2': {
-      name: '3-5-2',
+    '2-1-1': {
+      name: '2-1-1',
       positions: [
-        { id: 'gk', x: 50, y: 90, name: 'Thủ môn', required: true },
-        { id: 'cb1', x: 30, y: 70, name: 'Trung vệ 1' },
-        { id: 'cb2', x: 50, y: 70, name: 'Trung vệ 2' },
-        { id: 'cb3', x: 70, y: 70, name: 'Trung vệ 3' },
-        { id: 'lm', x: 15, y: 50, name: 'Tiền vệ trái' },
-        { id: 'cm1', x: 35, y: 50, name: 'Tiền vệ 1' },
-        { id: 'cm2', x: 50, y: 50, name: 'Tiền vệ 2' },
-        { id: 'cm3', x: 65, y: 50, name: 'Tiền vệ 3' },
-        { id: 'rm', x: 85, y: 50, name: 'Tiền vệ phải' },
-        { id: 'st1', x: 40, y: 25, name: 'Tiền đạo 1' },
-        { id: 'st2', x: 60, y: 25, name: 'Tiền đạo 2' }
+        { id: 'gk', x: 50, y: 88, name: 'Thủ môn', required: true },
+        { id: 'df1', x: 30, y: 70, name: 'Hậu vệ 1' },
+        { id: 'df2', x: 70, y: 70, name: 'Hậu vệ 2' },
+        { id: 'mf', x: 50, y: 50, name: 'Tiền vệ' },
+        { id: 'st', x: 50, y: 30, name: 'Tiền đạo' }
       ]
     },
-    '5-3-2': {
-      name: '5-3-2',
+    '1-1-2': {
+      name: '1-1-2',
       positions: [
-        { id: 'gk', x: 50, y: 90, name: 'Thủ môn', required: true },
-        { id: 'lb', x: 15, y: 70, name: 'Hậu vệ trái' },
-        { id: 'cb1', x: 35, y: 70, name: 'Trung vệ 1' },
-        { id: 'cb2', x: 50, y: 70, name: 'Trung vệ 2' },
-        { id: 'cb3', x: 65, y: 70, name: 'Trung vệ 3' },
-        { id: 'rb', x: 85, y: 70, name: 'Hậu vệ phải' },
-        { id: 'cm1', x: 30, y: 50, name: 'Tiền vệ 1' },
-        { id: 'cm2', x: 50, y: 50, name: 'Tiền vệ 2' },
-        { id: 'cm3', x: 70, y: 50, name: 'Tiền vệ 3' },
-        { id: 'st1', x: 40, y: 25, name: 'Tiền đạo 1' },
-        { id: 'st2', x: 60, y: 25, name: 'Tiền đạo 2' }
+        { id: 'gk', x: 50, y: 88, name: 'Thủ môn', required: true },
+        { id: 'df', x: 50, y: 70, name: 'Hậu vệ' },
+        { id: 'mf', x: 50, y: 50, name: 'Tiền vệ' },
+        { id: 'st1', x: 30, y: 30, name: 'Tiền đạo 1' },
+        { id: 'st2', x: 70, y: 30, name: 'Tiền đạo 2' }
       ]
     }
   };
