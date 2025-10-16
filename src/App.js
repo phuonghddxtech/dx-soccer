@@ -113,40 +113,38 @@ function App() {
       return;
     }
 
-    // Sắp xếp người chơi theo tier (cao nhất trước)
-    const sortedPlayers = [...players].sort((a, b) => b.tierValue - a.tierValue);
-    
-    const team1 = [];
-    const team2 = [];
-    let team1Score = 0;
-    let team2Score = 0;
-
-    // Thuật toán chia đội cân bằng
-    sortedPlayers.forEach(player => {
-      if (team1Score <= team2Score) {
-        team1.push(player);
-        team1Score += player.tierValue;
-      } else {
-        team2.push(player);
-        team2Score += player.tierValue;
+    // Nhóm người chơi theo tier
+    const playersByTier = {};
+    players.forEach(player => {
+      if (!playersByTier[player.tier]) {
+        playersByTier[player.tier] = [];
       }
+      playersByTier[player.tier].push(player);
     });
 
-    // Nếu chênh lệch quá lớn, điều chỉnh
-    if (Math.abs(team1Score - team2Score) > 2 && players.length > 4) {
-      // Tìm cặp người chơi có thể đổi để cân bằng hơn
-      for (let i = 0; i < Math.min(team1.length, team2.length); i++) {
-        const tempTeam1Score = team1Score - team1[i].tierValue + team2[i].tierValue;
-        const tempTeam2Score = team2Score - team2[i].tierValue + team1[i].tierValue;
-        
-        if (Math.abs(tempTeam1Score - tempTeam2Score) < Math.abs(team1Score - team2Score)) {
-          [team1[i], team2[i]] = [team2[i], team1[i]];
-          team1Score = tempTeam1Score;
-          team2Score = tempTeam2Score;
-          break;
+    const team1 = [];
+    const team2 = [];
+    
+    // Sắp xếp các tier theo giá trị (cao nhất trước)
+    const sortedTiers = Object.keys(playersByTier).sort((a, b) => 
+      tiers[b].value - tiers[a].value
+    );
+
+    // Chia đội: 2 người từ cùng tier sẽ vào 2 đội khác nhau
+    sortedTiers.forEach(tier => {
+      const tierPlayers = playersByTier[tier];
+      
+      // Shuffle ngẫu nhiên người chơi trong cùng tier
+      const shuffledTierPlayers = [...tierPlayers].sort(() => Math.random() - 0.5);
+      
+      shuffledTierPlayers.forEach((player, index) => {
+        if (index % 2 === 0) {
+          team1.push(player);
+        } else {
+          team2.push(player);
         }
-      }
-    }
+      });
+    });
 
     setTeams({ team1, team2 });
     setShowTeams(true);
